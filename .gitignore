@@ -1,0 +1,28 @@
+# Visual Studio / VS Code caches
+**/.vs/
+**/.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln
+*.sln.docstates
+*.code-workspace
+
+# Build outputs
+**/bin/
+**/obj/
+**/TestResults/
+*.pdb
+
+# Restored tools and packages
+**/packages/
+**/.dotnet/
+
+# Local logs and temporary files
+*.log
+Error.txt
+*.tmp
+*.cache
+desktop.ini
+Thumbs.db
+
