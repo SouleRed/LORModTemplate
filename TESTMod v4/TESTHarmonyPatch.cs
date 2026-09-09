@@ -45,6 +45,53 @@ namespace TESTMod
 
         #region 皮肤扩展补丁
 
+        [HarmonyPatch(typeof(BookXmlInfo), nameof(BookXmlInfo.GetThumbSprite))]
+        public static class BookXmlInfo_GetThumbSprite
+        {
+            private static readonly Dictionary<string, Sprite> Thumbnails = new Dictionary<string, Sprite>(StringComparer.OrdinalIgnoreCase);
+
+            [HarmonyPostfix]
+            public static void Postfix(BookXmlInfo __instance, ref Sprite __result)
+            {
+                if (__instance == null || __instance.id.packageId != TESTMod_ModInitializer.packageId) return;
+                string skin = __instance.CharacterSkin?.FirstOrDefault();
+                if (string.IsNullOrEmpty(skin)) return;
+
+                if (!Thumbnails.TryGetValue(skin, out Sprite sprite))
+                {
+                    Texture2D texture = null;
+                    try
+                    {
+                        string file = Path.Combine(TESTMod_ModInitializer.path, "..", "Resource", "CharacterSkin", skin, "Thumb.png");
+                        if (File.Exists(file))
+                        {
+                            texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                            if (texture.LoadImage(File.ReadAllBytes(file)))
+                            {
+                                sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
+                                sprite.name = TESTMod_ModInitializer.packageId + "_Thumb_" + skin;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[" + TESTMod_ModInitializer.packageId + "][核心书页缩略图] " + skin + ": " + e);
+                    }
+                    if (sprite == null && texture != null) UnityEngine.Object.Destroy(texture);
+                    // 缺失或加载失败也缓存，避免每次刷新UI重复读取磁盘。
+                    Thumbnails[skin] = sprite;
+                }
+                if (sprite != null) __result = sprite;
+            }
+        }
+
+        [HarmonyPatch(typeof(BookModel), nameof(BookModel.GetThumbSprite))]
+        public static class BookModel_GetThumbSprite
+        {
+            [HarmonyPostfix]
+            public static void Postfix(BookModel __instance, ref Sprite __result) => BookXmlInfo_GetThumbSprite.Postfix(__instance?.ClassInfo, ref __result);
+        }
+
         [HarmonyPatch(typeof(WorkshopSkinDataSetter), nameof(WorkshopSkinDataSetter.SetData), new Type[] { typeof(WorkshopSkinData) })]
         public static class WorkshopSkinDataSetter_SetData
         {
