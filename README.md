@@ -30,18 +30,3 @@
 `TESTMod v4/bin/Release/TESTMod.dll`
 
 本仓库没有对应的运行时 MOD 根目录，因此构建脚本只负责编译，不会部署到 Workshop。
-
-## Git LFS
-
-`必要程序集` 下的 DLL 使用 Git LFS 管理。首次克隆前需安装 Git LFS，克隆后可执行：
-
-```powershell
-git lfs install
-git lfs pull
-```
-
-当前正式 Git 工作目录为：
-
-`C:\Users\SouleRed\Desktop\MOD\LibraryOfRuinaModTemplate`
-
-初始化时指定的两个旧目录仍原样保留。后续修改应在本仓库的对应子目录中进行，避免两份副本发生分叉。
