@@ -496,6 +496,7 @@ namespace TESTMod
         public static Dictionary<string, Sprite> ArtWorks = new Dictionary<string, Sprite>();
         public static void InitializeArtWorks(DirectoryInfo dir)
         {
+            if (dir == null || !dir.Exists) return;
             if (dir.GetDirectories().Length != 0)
             {
                 DirectoryInfo[] directories = dir.GetDirectories();
@@ -507,6 +508,7 @@ namespace TESTMod
             System.IO.FileInfo[] files = dir.GetFiles();
             foreach (System.IO.FileInfo fileInfo in files)
             {
+                if (fileInfo.Name == ".gitkeep") continue;
                 Texture2D texture2D = new Texture2D(2, 2);
                 texture2D.LoadImage(File.ReadAllBytes(fileInfo.FullName));
                 Sprite value = Sprite.Create(texture2D, new Rect(0f, 0f, texture2D.width, texture2D.height), new Vector2(0f, 0f));
@@ -526,6 +528,7 @@ namespace TESTMod
             foreach (var sub in dir.GetDirectories()) AddAssets(sub);
             foreach (var fileInfo in dir.GetFiles())
             {
+                if (fileInfo.Name == ".gitkeep") continue;
                 var ext = fileInfo.Extension.ToLowerInvariant();
                 if (ext == ".manifest" || ext == ".meta") continue;
                 var ab = AssetBundle.LoadFromFile(fileInfo.FullName);

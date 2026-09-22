@@ -878,6 +878,9 @@ namespace TESTMod
             public static void Prefix()
             {
                 var id = new LorId(PACKAGE_ID, DROP_BOOK_ID);
+                // 空模板尚未定义掉落书；配置有效 XML 后才启用自动补书。
+                var book = Singleton<DropBookXmlList>.Instance.GetData(id);
+                if (book == null || book.isError) return;
                 var inv = Singleton<DropBookInventoryModel>.Instance;
 
                 int cur = inv.GetBookCount(id);
