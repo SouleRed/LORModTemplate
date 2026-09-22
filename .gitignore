@@ -26,6 +26,5 @@ Error.txt
 desktop.ini
 Thumbs.db
 
-# DLLs generated/copied by BuildAndDeploy.ps1 (source dependencies remain tracked)
-/MOD根目录/*/Assemblies/*.dll
-/MOD根目录/*/Assemblies/.template-build.json
+# Generated main DLL (runtime dependencies in Assemblies remain tracked)
+/MOD根目录/*/Assemblies/TESTMod.dll
